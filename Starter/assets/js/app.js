@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Database ready and fields created!');
     }
     function addNewTask(e) {
-        …...
+       
       // create a new object with the form info
       let newTask = {
           taskname: taskInput.value
@@ -67,7 +67,44 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       transaction.onerror = () => { console.log('There was an error, try again!'); }
   }
+         
+      function displayTaskList() {
+        // clear the previous task list
+        while (taskList.firstChild) {   taskList.removeChild(taskList.firstChild);}
 
+        // create the object store
+        let objectStore = DB.transaction('tasks').objectStore('tasks');
+
+        objectStore.openCursor().onsuccess = function(e) {
+            // assign the current cursor
+            let cursor = e.target.result;
+
+            if (cursor) {
+                     
+                li.setAttribute('data-task-id', cursor.value.id);
+                // Create text node and append it 
+                li.appendChild(document.createTextNode(cursor.value.taskname));
+               
+                cursor.continue();
+            }
+        }
+    }
+
+     //clear button event listener    
+clearBtn.addEventListener('click', clearAllTasks);
+//clear tasks 
+function clearAllTasks() {
+    //Create the transaction and object store
+    let transaction = DB.transaction("tasks", "readwrite"); 
+    let tasks = transaction.objectStore("tasks");
+
+    // clear the the table
+    tasks.clear(); 
+    //repaint the UI
+    displayTaskList();
+
+    console.log("Tasks Cleared !!!");
+}
 
 
 });
