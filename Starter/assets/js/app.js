@@ -105,6 +105,27 @@ function clearAllTasks() {
 
     console.log("Tasks Cleared !!!");
 }
+// Remove task event [event delegation]
+taskList.addEventListener('click', removeTask);
+
+function removeTask(e) {
+
+    if (e.target.parentElement.classList.contains('delete-item')) {
+        if (confirm('Are You Sure about that ?')) {
+            // get the task id
+            let taskID = Number(e.target.parentElement.parentElement.getAttribute('data-task-id'));
+            // use a transaction
+            let transaction = DB.transaction(['tasks'], 'readwrite');
+            let objectStore = transaction.objectStore('tasks');
+            objectStore.delete(taskID);
+
+            transaction.oncomplete = () => {
+                e.target.parentElement.parentElement.remove();
+            }
+
+        }
+    }
+}
 
 
 });
