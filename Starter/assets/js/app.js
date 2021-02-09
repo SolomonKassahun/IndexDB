@@ -32,6 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
         // display the Task List 
         displayTaskList();
     }
+      // This method runs once (great for creating the schema)
+      TasksDB.onupgradeneeded = function(e) {
+        // the event will be the database
+        let db = e.target.result;
+
+        // create an object store, 
+        // keypath is going to be the Indexes
+        let objectStore = db.createObjectStore('tasks', { keyPath: 'id', autoIncrement: true });
+
+        // createindex: 1) field name 2) keypath 3) options
+        objectStore.createIndex('taskname', 'taskname', { unique: false });
+
+        console.log('Database ready and fields created!');
+    }
+    function addNewTask(e) {
+        …...
+      // create a new object with the form info
+      let newTask = {
+          taskname: taskInput.value
+      }
+      // Insert the object into the database 
+      let transaction = DB.transaction(['tasks'], 'readwrite');
+      let objectStore = transaction.objectStore('tasks');
+
+      let request = objectStore.add(newTask);
+      // on success
+      request.onsuccess = () => {
+          form.reset();
+      }
+      transaction.oncomplete = () => {
+          console.log('New Task added');
+          displayTaskList();
+      }
+      transaction.onerror = () => { console.log('There was an error, try again!'); }
+  }
 
 
 
