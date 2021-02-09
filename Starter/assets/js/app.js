@@ -7,3 +7,12 @@ const clearBtn = document.querySelector('.clear-tasks'); //the all task clear bu
 
 const reloadIcon = document.querySelector('.fa'); //the reload button at the top navigation 
 
+//DB variable 
+let DB;
+
+// Add Event Listener [on Load]
+document.addEventListener('DOMContentLoaded', () => {  
+    
+      //all code will reside here 
+
+});
