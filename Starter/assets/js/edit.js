@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-
     form.addEventListener('submit', updateTask);
 
     function updateTask(e) {
         e.preventDefault();
+        console.log(id);
 
         // Check empty entry
         if (taskInput.value === '') {
@@ -72,11 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
         2. Use the id on put method of index db
         
         */
+        let transaction = DB.transaction(['tasks'], 'readwrite');
+        objectStore = transaction.objectStore('tasks', {
+            keyPath: 'id',
+            autoIncrement: true
+        });
+        let request = objectStore.get(id);
+        let editedTask = {
+            id: id,
+            taskname: taskInput.value,
+            date: new Date()
+        }
+        request.onsuccess = function (e) {
+            var store = objectStore.put(editedTask);
+            store.onsuccess = function (e) {
+                console.log('Success in updating record');
+                alert('Updated Succesfully!');
+                history.back();
+            };
 
-        history.back();
+        }
     }
-
-
+});
 
 
 });
