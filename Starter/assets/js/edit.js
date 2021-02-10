@@ -7,19 +7,19 @@ const urlParams = new URLSearchParams(window.location.search);
 const id = Number(urlParams.get('id'));
 //DB
 var DB;
-
+  
 // Add Event Listener [on Load]
 document.addEventListener('DOMContentLoaded', () => {
     // create the database
     let TasksDB = indexedDB.open('tasks', 1);
 
     // if there's an error
-    TasksDB.onerror = function() {
-            console.log('There was an error');
-        }
-        // if everything is fine, assign the result to the instance
-    TasksDB.onsuccess = function() {
-        // console.log('Database Ready');
+    TasksDB.onerror = function () {
+        console.log('There was an error');
+    }
+    // if everything is fine, assign the result to the instance
+    TasksDB.onsuccess = function () {
+        console.log('Database Ready');
 
         // save the result
         DB = TasksDB.result;
@@ -29,13 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function displayTask() {
 
+    function displayTask() {
+        console.log(DB);
         var transaction = DB.transaction(['tasks']);
         var objectStore = transaction.objectStore('tasks');
+        // console.log(typeof (id));
+        // console.log(id);
         var request = objectStore.get(id);
 
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
             if (request.result) {
                 taskInput.value = request.result.taskname;
 
@@ -44,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             console.log('Transaction failed');
         };
 
@@ -93,7 +96,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
     }
-});
-
-
 });
